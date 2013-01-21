@@ -18,6 +18,9 @@
 		80C8B3A5167EF208000F1039 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 80C8B3A4167EF208000F1039 /* Default-568h@2x.png */; };
 		80C8B3A8167EF208000F1039 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C8B3A7167EF208000F1039 /* ViewController.m */; };
 		80C8B3AB167EF208000F1039 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 80C8B3A9167EF208000F1039 /* ViewController.xib */; };
+		80C8B3B3167EF2D7000F1039 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80C8B3B1167EF2CB000F1039 /* AVFoundation.framework */; };
+		80FDBB44169457930069D614 /* cyclone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 80FDBB43169457930069D614 /* cyclone.mp3 */; };
+		80FDBB5C169685440069D614 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80FDBB5A169685380069D614 /* CoreMedia.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +40,9 @@
 		80C8B3A6167EF208000F1039 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		80C8B3A7167EF208000F1039 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		80C8B3AA167EF208000F1039 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController.xib; sourceTree = "<group>"; };
+		80C8B3B1167EF2CB000F1039 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		80FDBB43169457930069D614 /* cyclone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = cyclone.mp3; path = ../../../../../../Downloads/cyclone.mp3; sourceTree = "<group>"; };
+		80FDBB5A169685380069D614 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,7 +50,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80FDBB5C169685440069D614 /* CoreMedia.framework in Frameworks */,
 				80C8B38F167EF208000F1039 /* UIKit.framework in Frameworks */,
+				80C8B3B3167EF2D7000F1039 /* AVFoundation.framework in Frameworks */,
 				80C8B391167EF208000F1039 /* Foundation.framework in Frameworks */,
 				80C8B393167EF208000F1039 /* CoreGraphics.framework in Frameworks */,
 			);
@@ -73,6 +81,8 @@
 		80C8B38D167EF208000F1039 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				80FDBB5A169685380069D614 /* CoreMedia.framework */,
+				80C8B3B1167EF2CB000F1039 /* AVFoundation.framework */,
 				80C8B38E167EF208000F1039 /* UIKit.framework */,
 				80C8B390167EF208000F1039 /* Foundation.framework */,
 				80C8B392167EF208000F1039 /* CoreGraphics.framework */,
@@ -83,6 +93,7 @@
 		80C8B394167EF208000F1039 /* AVQueuePlayerSample */ = {
 			isa = PBXGroup;
 			children = (
+				80FDBB43169457930069D614 /* cyclone.mp3 */,
 				80C8B39D167EF208000F1039 /* AppDelegate.h */,
 				80C8B39E167EF208000F1039 /* AppDelegate.m */,
 				80C8B3A6167EF208000F1039 /* ViewController.h */,
@@ -163,6 +174,7 @@
 				80C8B3A3167EF208000F1039 /* Default@2x.png in Resources */,
 				80C8B3A5167EF208000F1039 /* Default-568h@2x.png in Resources */,
 				80C8B3AB167EF208000F1039 /* ViewController.xib in Resources */,
+				80FDBB44169457930069D614 /* cyclone.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,7 +222,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Yuichi Fujiki (H74ZK9ZJXQ)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -225,6 +237,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "91DED85B-7A80-4A0D-AF61-E52CA9EA80B6";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -292,6 +305,7 @@
 				80C8B3B0167EF208000F1039 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
