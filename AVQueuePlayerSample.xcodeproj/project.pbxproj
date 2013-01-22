@@ -27,6 +27,8 @@
 		80C8B3B3167EF2D7000F1039 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80C8B3B1167EF2CB000F1039 /* AVFoundation.framework */; };
 		80DAB45B16ADAEF40061DB26 /* AudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 80DAB45A16ADAEF30061DB26 /* AudioPlayer.m */; };
 		80FDBB5C169685440069D614 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80FDBB5A169685380069D614 /* CoreMedia.framework */; };
+		DBF0974D16AF3BFC00807C56 /* SilentPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DBF0974C16AF3BFC00807C56 /* SilentPlayer.m */; };
+		DBF0975116AF3EF200807C56 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBF0974F16AF3EE900807C56 /* AudioToolbox.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +59,9 @@
 		80DAB45916ADAEF30061DB26 /* AudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioPlayer.h; sourceTree = "<group>"; };
 		80DAB45A16ADAEF30061DB26 /* AudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioPlayer.m; sourceTree = "<group>"; };
 		80FDBB5A169685380069D614 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		DBF0974B16AF3BFC00807C56 /* SilentPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SilentPlayer.h; sourceTree = "<group>"; };
+		DBF0974C16AF3BFC00807C56 /* SilentPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SilentPlayer.m; sourceTree = "<group>"; };
+		DBF0974F16AF3EE900807C56 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DBF0975116AF3EF200807C56 /* AudioToolbox.framework in Frameworks */,
 				80603FB916AF183600009DB8 /* SystemConfiguration.framework in Frameworks */,
 				80FDBB5C169685440069D614 /* CoreMedia.framework in Frameworks */,
 				80C8B38F167EF208000F1039 /* UIKit.framework in Frameworks */,
@@ -108,6 +114,7 @@
 		80C8B38D167EF208000F1039 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DBF0974F16AF3EE900807C56 /* AudioToolbox.framework */,
 				80603FB716AF182200009DB8 /* SystemConfiguration.framework */,
 				80FDBB5A169685380069D614 /* CoreMedia.framework */,
 				80C8B3B1167EF2CB000F1039 /* AVFoundation.framework */,
@@ -131,6 +138,8 @@
 				80DAB45916ADAEF30061DB26 /* AudioPlayer.h */,
 				80DAB45A16ADAEF30061DB26 /* AudioPlayer.m */,
 				80C8B395167EF208000F1039 /* Supporting Files */,
+				DBF0974B16AF3BFC00807C56 /* SilentPlayer.h */,
+				DBF0974C16AF3BFC00807C56 /* SilentPlayer.m */,
 			);
 			path = AVQueuePlayerSample;
 			sourceTree = "<group>";
@@ -224,6 +233,7 @@
 				80C8B3A8167EF208000F1039 /* ViewController.m in Sources */,
 				80DAB45B16ADAEF40061DB26 /* AudioPlayer.m in Sources */,
 				80603FB016AF14B000009DB8 /* Reachability.m in Sources */,
+				DBF0974D16AF3BFC00807C56 /* SilentPlayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

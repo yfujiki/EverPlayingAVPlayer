@@ -28,16 +28,9 @@ static NSString * CurrentItemContext = @"CurrentItem";
 static NSString * PlaybackLikelyToKeepUp = @"PlaybackLikelyToKeepUp";
 static NSString * ItemStatusContext = @"ItemStatus";
 
-static NSString * SilentPlayerStatusContext = @"SilentPlayerStatus";
-static NSString * SilentPlayerRateContext = @"SilentPlayerRate";
-static NSString * SilentPlayerCurrentItemContext = @"SilentPlayerCurrentItem";
-static NSString * SilentPlayerPlaybackLikelyToKeepUp = @"SilentPlayerPlaybackLikelyToKeepUp";
-static NSString * SilentPlayerItemStatusContext = @"SilentPlayerItemStatus";
-
 - (id) init {
     self = [super init];
     if(self) {
-//        [self loadSilentTracks];
         [self loadTracks];
         [self registerObservers];
     }
@@ -66,55 +59,13 @@ static NSString * SilentPlayerItemStatusContext = @"SilentPlayerItemStatus";
         [items addObject:item];
     }];
     
-    self.queuePlayer = [[AVQueuePlayer alloc] initWithItems:items];
-    
-//    self.timer = [NSTimer timerWithTimeInterval:1.0f target:self selector:@selector(timer:) userInfo:nil repeats:YES];
-//    [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
+    self.queuePlayer = [[AVQueuePlayer alloc] initWithItems:items];    
 }
 
 - (void)timer:(id)sender {
     NSLog(@"(Timer) Player Status : %d", self.queuePlayer.status);
     NSLog(@"(Timer) Current Item Status : %d", self.queuePlayer.currentItem.status);
     NSLog(@"(Timer) Playback Rate : %f", self.queuePlayer.rate);
-}
-
-- (void)reloadSilentTracks {
-    [self.silentPlayer removeObserver:self forKeyPath:@"status"];
-    [self.silentPlayer removeObserver:self forKeyPath:@"currentItem"];
-    [self.silentPlayer removeObserver:self forKeyPath:@"rate"];
-    
-    [self.silentPlayer.currentItem removeObserver:self forKeyPath:@"status"];
-    [self.silentPlayer.currentItem removeObserver:self forKeyPath:@"playbackLikelyToKeepup"];
-    
-    [self loadSilentTracks];
-}
-
-- (void)loadSilentTracks {
-    self.silentTrack = [[NSBundle mainBundle] URLForResource:@"blank-1sec" withExtension:@"mp3"].absoluteString;
-    
-    AVPlayerItem * item = [[AVPlayerItem alloc] initWithURL:[NSURL URLWithString:self.silentTrack]];
-    self.silentPlayer = [[AVPlayer alloc] initWithPlayerItem:item];
-    self.silentPlayer.actionAtItemEnd = AVPlayerActionAtItemEndNone;
-    self.silentPlayer.rate = 0.001f;
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(onSilentTrackFinishedNotification:)
-                                                 name:AVPlayerItemDidPlayToEndTimeNotification
-                                               object:item];
-    
-    [self.silentPlayer addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&SilentPlayerStatusContext];
-    [self.silentPlayer addObserver:self forKeyPath:@"currentItem" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:&SilentPlayerCurrentItemContext];
-    [self.silentPlayer addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:&SilentPlayerRateContext];
-    
-    [item addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:&SilentPlayerItemStatusContext];
-    [item addObserver:self forKeyPath:@"playbackLikelyToKeepup" options:NSKeyValueObservingOptionNew context:&SilentPlayerPlaybackLikelyToKeepUp];
-    
-//    [self.silentPlayer addPeriodicTimeObserverForInterval:CMTimeMake(1.0f, 1.0f)
-//                                                   queue:dispatch_get_main_queue()
-//                                              usingBlock:^(CMTime time) {
-//                                                  NSLog(@"Checking int...");
-//                                              }];
-
 }
 
 - (void)registerObservers {
@@ -216,14 +167,7 @@ static NSString * SilentPlayerItemStatusContext = @"SilentPlayerItemStatus";
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
                         change:(NSDictionary *)change context:(void *)context {
     
-    if (context == &SilentPlayerStatusContext) {
-        if ([self.silentPlayer status] == AVPlayerStatusReadyToPlay) {
-            [self.silentPlayer play];
-        } else if ([self.silentPlayer status] == AVPlayerStatusFailed) {
-            NSLog(@"Silent player failed.");
-//            [self reloadSilentTracks];
-        }
-    } else if (context == &PlayerStatusContext) {
+    if (context == &PlayerStatusContext) {
         AVPlayer *thePlayer = (AVPlayer *)object;
         if ([thePlayer status] == AVPlayerStatusFailed) {
             NSError *error = [thePlayer error];
@@ -239,8 +183,6 @@ static NSString * SilentPlayerItemStatusContext = @"SilentPlayerItemStatus";
             AVURLAsset * asset = (AVURLAsset *)self.queuePlayer.currentItem.asset;
             [[NSNotificationCenter defaultCenter] postNotificationName:kPlayerItemChangedEvent object:asset];
         }
-    } else if(context == &SilentPlayerCurrentItemContext) {
-        // Nothing to do
     } else if(context == &CurrentItemContext) {
         AVPlayerItem * oldPlayerItem = change[NSKeyValueChangeOldKey];
         if(oldPlayerItem) {
@@ -251,17 +193,6 @@ static NSString * SilentPlayerItemStatusContext = @"SilentPlayerItemStatus";
         // Issue item changed event
         AVURLAsset * asset = (AVURLAsset *)self.queuePlayer.currentItem.asset;
         [[NSNotificationCenter defaultCenter] postNotificationName:kPlayerItemChangedEvent object:asset];
-        
-    } else if(context == &SilentPlayerRateContext) {
-        float oldRate = [change[NSKeyValueChangeOldKey] floatValue];
-        float newRate = [change[NSKeyValueChangeNewKey] floatValue];
-        NSLog(@"Silent Player rate changed from %f to %f", oldRate, newRate);
-        if(newRate == 0.0 && oldRate == 1.0) {
-            // It means that the player has stopped for whatever reason
-//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-//                self.silentPlayer.rate = 1.0;
-//            });
-        }
         
     } else if(context == &PlayerRateContext) {
         float oldRate = [change[NSKeyValueChangeOldKey] floatValue];
@@ -274,14 +205,6 @@ static NSString * SilentPlayerItemStatusContext = @"SilentPlayerItemStatus";
             });
         }
         
-    } else if(context == &SilentPlayerPlaybackLikelyToKeepUp) {
-        AVPlayerItem * item = (AVPlayerItem *)object;
-        if(item.playbackLikelyToKeepUp) {
-            [self.silentPlayer play];
-            NSLog(@"Silent Player Play item due to likelyToKeepUp");
-        } else {
-            NSLog(@"Silent Player Pause (not) item due to likelyToKeepUp");
-        }
     } else if(context == &PlaybackLikelyToKeepUp) {
         AVPlayerItem * item = (AVPlayerItem *)object;
         if(item.playbackLikelyToKeepUp) {
@@ -290,20 +213,10 @@ static NSString * SilentPlayerItemStatusContext = @"SilentPlayerItemStatus";
         } else {
             NSLog(@"Pause (not) item due to likelyToKeepUp");
         }
-    } else if(context == &SilentPlayerItemStatusContext) {
-        AVPlayerItem * item = (AVPlayerItem *)object;
-        if(item.status == AVPlayerItemStatusReadyToPlay) {
-//            [self.silentPlayer play];
-            NSLog(@"Silent Player Play item due to status");
-        } else if(item.status == AVPlayerItemStatusFailed) {
-            NSLog(@"Silent Player Item status failed !!!!!!!!!!!!!!!!!!");
-        } else {
-            // Unknown
-        }
     } else if(context == &ItemStatusContext) {
         AVPlayerItem * item = (AVPlayerItem *)object;
         if(item.status == AVPlayerItemStatusReadyToPlay) {
-//            [self play];
+            [self play];
             NSLog(@"Play item due to status");
         } else if(item.status == AVPlayerItemStatusFailed) {
             NSLog(@"Item status failed !!!!!!!!!!!!!!!!!!");

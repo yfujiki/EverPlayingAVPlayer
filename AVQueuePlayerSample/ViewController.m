@@ -8,11 +8,13 @@
 
 #import "ViewController.h"
 #import "AudioPlayer.h"
+#import "SilentPlayer.h"
 #import <AVFoundation/AVFoundation.h>
 
 @interface ViewController ()
 
 @property (nonatomic, strong) AudioPlayer * player;
+@property (nonatomic, strong) SilentPlayer * silentPlayer;
 
 @property (nonatomic, weak) IBOutlet UIButton * playButton;
 @property (nonatomic, weak) IBOutlet UISlider * slider;
@@ -35,7 +37,9 @@
     [self registerForNotifications];
     
     self.player = [[AudioPlayer alloc] init];
-    [self.playButton setEnabled:NO];    
+    [self.playButton setEnabled:NO];
+    
+    [[SilentPlayer sharedInstance] start];
 }
 
 - (void)registerForNotifications {
