@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8053E6EB16ADD3D600174643 /* blank-1sec.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 8053E6EA16ADD3D600174643 /* blank-1sec.mp3 */; };
+		80603FB016AF14B000009DB8 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 80603FAD16AF14B000009DB8 /* Reachability.m */; };
+		80603FB116AF14B000009DB8 /* Reachability.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 80603FAE16AF14B000009DB8 /* Reachability.podspec */; };
+		80603FB216AF14B000009DB8 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 80603FAF16AF14B000009DB8 /* README.md */; };
+		80603FB916AF183600009DB8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80603FB716AF182200009DB8 /* SystemConfiguration.framework */; };
+		80603FBB16AF1E0900009DB8 /* blank-1min.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 80603FBA16AF1E0800009DB8 /* blank-1min.mp3 */; };
 		80C8B38F167EF208000F1039 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80C8B38E167EF208000F1039 /* UIKit.framework */; };
 		80C8B391167EF208000F1039 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80C8B390167EF208000F1039 /* Foundation.framework */; };
 		80C8B393167EF208000F1039 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80C8B392167EF208000F1039 /* CoreGraphics.framework */; };
@@ -19,11 +25,18 @@
 		80C8B3A8167EF208000F1039 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C8B3A7167EF208000F1039 /* ViewController.m */; };
 		80C8B3AB167EF208000F1039 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 80C8B3A9167EF208000F1039 /* ViewController.xib */; };
 		80C8B3B3167EF2D7000F1039 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80C8B3B1167EF2CB000F1039 /* AVFoundation.framework */; };
-		80FDBB44169457930069D614 /* cyclone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 80FDBB43169457930069D614 /* cyclone.mp3 */; };
+		80DAB45B16ADAEF40061DB26 /* AudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 80DAB45A16ADAEF30061DB26 /* AudioPlayer.m */; };
 		80FDBB5C169685440069D614 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80FDBB5A169685380069D614 /* CoreMedia.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8053E6EA16ADD3D600174643 /* blank-1sec.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "blank-1sec.mp3"; sourceTree = "<group>"; };
+		80603FAC16AF14B000009DB8 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		80603FAD16AF14B000009DB8 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		80603FAE16AF14B000009DB8 /* Reachability.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Reachability.podspec; sourceTree = "<group>"; };
+		80603FAF16AF14B000009DB8 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		80603FB716AF182200009DB8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		80603FBA16AF1E0800009DB8 /* blank-1min.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "blank-1min.mp3"; sourceTree = "<group>"; };
 		80C8B38A167EF208000F1039 /* AVQueuePlayerSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AVQueuePlayerSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		80C8B38E167EF208000F1039 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		80C8B390167EF208000F1039 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -41,7 +54,8 @@
 		80C8B3A7167EF208000F1039 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		80C8B3AA167EF208000F1039 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController.xib; sourceTree = "<group>"; };
 		80C8B3B1167EF2CB000F1039 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		80FDBB43169457930069D614 /* cyclone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = cyclone.mp3; path = ../../../../../../Downloads/cyclone.mp3; sourceTree = "<group>"; };
+		80DAB45916ADAEF30061DB26 /* AudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioPlayer.h; sourceTree = "<group>"; };
+		80DAB45A16ADAEF30061DB26 /* AudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioPlayer.m; sourceTree = "<group>"; };
 		80FDBB5A169685380069D614 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -50,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80603FB916AF183600009DB8 /* SystemConfiguration.framework in Frameworks */,
 				80FDBB5C169685440069D614 /* CoreMedia.framework in Frameworks */,
 				80C8B38F167EF208000F1039 /* UIKit.framework in Frameworks */,
 				80C8B3B3167EF2D7000F1039 /* AVFoundation.framework in Frameworks */,
@@ -61,9 +76,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		80603FAB16AF14B000009DB8 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				80603FAC16AF14B000009DB8 /* Reachability.h */,
+				80603FAD16AF14B000009DB8 /* Reachability.m */,
+				80603FAE16AF14B000009DB8 /* Reachability.podspec */,
+				80603FAF16AF14B000009DB8 /* README.md */,
+			);
+			path = Reachability;
+			sourceTree = "<group>";
+		};
 		80C8B37F167EF208000F1039 = {
 			isa = PBXGroup;
 			children = (
+				80603FAB16AF14B000009DB8 /* Reachability */,
 				80C8B394167EF208000F1039 /* AVQueuePlayerSample */,
 				80C8B38D167EF208000F1039 /* Frameworks */,
 				80C8B38B167EF208000F1039 /* Products */,
@@ -81,6 +108,7 @@
 		80C8B38D167EF208000F1039 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				80603FB716AF182200009DB8 /* SystemConfiguration.framework */,
 				80FDBB5A169685380069D614 /* CoreMedia.framework */,
 				80C8B3B1167EF2CB000F1039 /* AVFoundation.framework */,
 				80C8B38E167EF208000F1039 /* UIKit.framework */,
@@ -93,12 +121,15 @@
 		80C8B394167EF208000F1039 /* AVQueuePlayerSample */ = {
 			isa = PBXGroup;
 			children = (
-				80FDBB43169457930069D614 /* cyclone.mp3 */,
+				80603FBA16AF1E0800009DB8 /* blank-1min.mp3 */,
+				8053E6EA16ADD3D600174643 /* blank-1sec.mp3 */,
 				80C8B39D167EF208000F1039 /* AppDelegate.h */,
 				80C8B39E167EF208000F1039 /* AppDelegate.m */,
 				80C8B3A6167EF208000F1039 /* ViewController.h */,
 				80C8B3A7167EF208000F1039 /* ViewController.m */,
 				80C8B3A9167EF208000F1039 /* ViewController.xib */,
+				80DAB45916ADAEF30061DB26 /* AudioPlayer.h */,
+				80DAB45A16ADAEF30061DB26 /* AudioPlayer.m */,
 				80C8B395167EF208000F1039 /* Supporting Files */,
 			);
 			path = AVQueuePlayerSample;
@@ -174,7 +205,10 @@
 				80C8B3A3167EF208000F1039 /* Default@2x.png in Resources */,
 				80C8B3A5167EF208000F1039 /* Default-568h@2x.png in Resources */,
 				80C8B3AB167EF208000F1039 /* ViewController.xib in Resources */,
-				80FDBB44169457930069D614 /* cyclone.mp3 in Resources */,
+				8053E6EB16ADD3D600174643 /* blank-1sec.mp3 in Resources */,
+				80603FB116AF14B000009DB8 /* Reachability.podspec in Resources */,
+				80603FB216AF14B000009DB8 /* README.md in Resources */,
+				80603FBB16AF1E0900009DB8 /* blank-1min.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -188,6 +222,8 @@
 				80C8B39B167EF208000F1039 /* main.m in Sources */,
 				80C8B39F167EF208000F1039 /* AppDelegate.m in Sources */,
 				80C8B3A8167EF208000F1039 /* ViewController.m in Sources */,
+				80DAB45B16ADAEF40061DB26 /* AudioPlayer.m in Sources */,
+				80603FB016AF14B000009DB8 /* Reachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
