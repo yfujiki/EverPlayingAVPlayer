@@ -7,16 +7,13 @@
 //
 
 #import "AudioPlayer.h"
+#import "SilentPlayer.h"
 
 @interface AudioPlayer ()
 
 @property (nonatomic, strong) AVQueuePlayer * queuePlayer;
-@property (nonatomic, strong) AVPlayer * silentPlayer;
-
 @property (nonatomic, strong) NSArray * tracks;
-@property (nonatomic, strong) NSString * silentTrack;
-
-@property (nonatomic, strong) NSTimer * timer;
+@property (nonatomic, strong) id timeObserver;
 
 @end
 
@@ -36,6 +33,7 @@ static NSString * ItemStatusContext = @"ItemStatus";
     }
     return self;
 }
+
 
 - (void)loadTracks {
     
@@ -62,6 +60,20 @@ static NSString * ItemStatusContext = @"ItemStatus";
     self.queuePlayer = [[AVQueuePlayer alloc] initWithItems:items];    
 }
 
+- (void)rebuildPlayer {
+    if(self.queuePlayer) {
+        [self unregisterObservers];
+        if(self.queuePlayer.currentItem) {
+            [self unregisterObserversForItem:self.queuePlayer.currentItem];
+        }
+    }
+    [self loadTracks];
+    
+    [self registerObservers];
+    
+    [self play];
+}
+
 - (void)timer:(id)sender {
     NSLog(@"(Timer) Player Status : %d", self.queuePlayer.status);
     NSLog(@"(Timer) Current Item Status : %d", self.queuePlayer.currentItem.status);
@@ -74,14 +86,23 @@ static NSString * ItemStatusContext = @"ItemStatus";
     [self.queuePlayer addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:&PlayerRateContext];
     
     __weak id weakSelf = self;
-    [self.queuePlayer addPeriodicTimeObserverForInterval:CMTimeMake(1.0f, 1.0f)
-                                                   queue:dispatch_get_main_queue()
-                                              usingBlock:^(CMTime time) {
-                                                  [weakSelf updateProgress:nil];
-                                                  NSLog(@"Player Status : %d", self.queuePlayer.status);
-                                                  NSLog(@"Current Item Status : %d", self.queuePlayer.currentItem.status);
-                                                  NSLog(@"Playback Rate : %f", self.queuePlayer.rate);                                                  
-                                              }];    
+    self.timeObserver =
+        [self.queuePlayer addPeriodicTimeObserverForInterval:CMTimeMake(1.0f, 1.0f)
+                                                       queue:dispatch_get_main_queue()
+                                                  usingBlock:^(CMTime time) {
+                                                  
+                                                      [weakSelf updateProgress:nil];
+                                                      NSLog(@"Player Status : %d", self.queuePlayer.status);
+                                                      NSLog(@"Current Item Status : %d", self.queuePlayer.currentItem.status);
+                                                      NSLog(@"Playback Rate : %f", self.queuePlayer.rate);
+                                                  }];    
+}
+
+- (void)unregisterObservers {
+    [self.queuePlayer removeObserver:self forKeyPath:@"status"];
+    [self.queuePlayer removeObserver:self forKeyPath:@"currentItem"];
+    [self.queuePlayer removeObserver:self forKeyPath:@"rate"];
+    [self.queuePlayer removeTimeObserver:self.timeObserver];
 }
 
 - (void)registerObserversForItem : (AVPlayerItem *)item {
@@ -113,28 +134,21 @@ static NSString * ItemStatusContext = @"ItemStatus";
     return (currentTime / duration);
 }
 
-- (void) play {
+- (void) play {    
     [self.queuePlayer play];
-    [self.silentPlayer play];
-    
-    // Issue play event
+    [[NSNotificationCenter defaultCenter] postNotificationName:kPlayerStartedEvent object:nil];
 }
 
 - (void) pause {    
     [self.queuePlayer pause];
-    [self.silentPlayer pause];
-    
-    // Issue pause event
+    [[NSNotificationCenter defaultCenter] postNotificationName:kPlayerPausedEvent object:nil];
 }
 
 - (void) seekToTime:(CMTime)currentTime completionHandler:(void (^)(BOOL finished))completionHandler {
-//    [self.silentPlayer pause];
     [self.queuePlayer pause];
     
     [self.queuePlayer seekToTime:currentTime completionHandler:^(BOOL finished) {
 
-//        [self reloadSilentTracks];
-        
         [self.queuePlayer play];
         
         completionHandler(finished);
@@ -142,6 +156,8 @@ static NSString * ItemStatusContext = @"ItemStatus";
 }
 
 - (void)updateProgress:(id)sender {
+    [SilentPlayer sharedInstance]->timeoutBase = time(NULL);
+    
     CMTime currentTime = self.currentTime;
     CMTime duration = self.duration;
     
@@ -172,6 +188,13 @@ static NSString * ItemStatusContext = @"ItemStatus";
         if ([thePlayer status] == AVPlayerStatusFailed) {
             NSError *error = [thePlayer error];
             NSLog(@"Some error occured while preparing player : %@", [error localizedDescription]);
+
+            int64_t delayInSeconds = 5.0;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                [self rebuildPlayer];
+            });
+
             return;
         } else {
             [self registerObserversForItem:self.queuePlayer.currentItem];
@@ -200,9 +223,9 @@ static NSString * ItemStatusContext = @"ItemStatus";
         NSLog(@"Player rate changed from %f to %f", oldRate, newRate);
         if(newRate == 0.0 && oldRate == 1.0) {
             // It means that the player has stopped for whatever reason
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                self.queuePlayer.rate = 1.0;                
-            });
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+//                self.queuePlayer.rate = 1.0;
+//            });
         }
         
     } else if(context == &PlaybackLikelyToKeepUp) {
@@ -211,17 +234,19 @@ static NSString * ItemStatusContext = @"ItemStatus";
             [self play];
             NSLog(@"Play item due to likelyToKeepUp");
         } else {
-            NSLog(@"Pause (not) item due to likelyToKeepUp");
+            [self pause];
+            NSLog(@"Pause item due to likelyToKeepUp");
         }
     } else if(context == &ItemStatusContext) {
         AVPlayerItem * item = (AVPlayerItem *)object;
         if(item.status == AVPlayerItemStatusReadyToPlay) {
             [self play];
             NSLog(@"Play item due to status");
-        } else if(item.status == AVPlayerItemStatusFailed) {
+        } else if(item.status == AVPlayerItemStatusFailed) {            
             NSLog(@"Item status failed !!!!!!!!!!!!!!!!!!");
         } else {
-            NSLog(@"Item status has changed to unknown");
+            [self pause];
+            NSLog(@"Pausing since item status has changed to unknown");
             // Unknown
         }
     } else {
@@ -234,15 +259,5 @@ static NSString * ItemStatusContext = @"ItemStatus";
 - (void)onTrackFinishedNotification:(NSNotification *)notification {
     [self.queuePlayer advanceToNextItem];
 }
-
-- (void)onSilentTrackFinishedNotification:(NSNotification *)notification {
-    AVPlayerItem * item = [notification object];
-    [item seekToTime:kCMTimeZero];
-    [self.silentPlayer play];
-    
-    // Check status of main player and resume depending on the Reachability status
-    NSLog(@"Checking....");    
-}
-
 
 @end

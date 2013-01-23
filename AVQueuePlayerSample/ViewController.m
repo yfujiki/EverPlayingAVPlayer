@@ -14,7 +14,6 @@
 @interface ViewController ()
 
 @property (nonatomic, strong) AudioPlayer * player;
-@property (nonatomic, strong) SilentPlayer * silentPlayer;
 
 @property (nonatomic, weak) IBOutlet UIButton * playButton;
 @property (nonatomic, weak) IBOutlet UISlider * slider;
@@ -38,16 +37,14 @@
     
     self.player = [[AudioPlayer alloc] init];
     [self.playButton setEnabled:NO];
-    
-    [[SilentPlayer sharedInstance] start];
 }
 
 - (void)registerForNotifications {
-   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerStarted) name:kPlayerStartedEvent object:nil];
-   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerPaused) name:kPlayerPausedEvent object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerStarted:) name:kPlayerStartedEvent object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerPaused:) name:kPlayerPausedEvent object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemChanged:) name:kPlayerItemChangedEvent object:nil];
-   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerReady) name:kPlayerReadyEvent object:nil];
-   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateProgress:) name:kPlayerProgressUpdatedEvent object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerReady:) name:kPlayerReadyEvent object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateProgress:) name:kPlayerProgressUpdatedEvent object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -85,7 +82,7 @@
     self.currenTitleLabel.text = asset.URL.path;
 }
 
-- (void)playerReady {
+- (void)playerReady:(NSNotification *)notification {
     [self.playButton setEnabled:YES];
 }
 

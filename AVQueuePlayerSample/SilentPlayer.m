@@ -9,10 +9,9 @@
 #import "SilentPlayer.h"
 
 #define kSampleRate 44100
-#define kFrequency  0
+#define kFrequency  400
 
-OSStatus RenderTone(
-                    void *inRefCon,
+OSStatus RenderTone(void *inRefCon,
                     AudioUnitRenderActionFlags 	*ioActionFlags,
                     const AudioTimeStamp 		*inTimeStamp,
                     UInt32 						inBusNumber,
@@ -44,8 +43,11 @@ OSStatus RenderTone(
 		}
 	}
 	
-	// Store the theta back in the view controller
 	player->theta = theta;
+
+    if(time(NULL) - player->timeoutBase > player->timeout) {
+        [player stop];
+    }
     
 	return noErr;
 }
@@ -69,8 +71,17 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
     return __instance;
 }
 
-- (void)createToneUnit
-{
+- (id) init {
+    self = [super init];
+    if(self) {
+        timeout = LONG_MAX;
+        timeoutBase = 0;
+        theta = 0;
+    }
+    return self;
+}
+
+- (void)createToneUnit {
 	// Configure the search parameters to find the default playback output unit
 	// (called the kAudioUnitSubType_RemoteIO on iOS but
 	// kAudioUnitSubType_DefaultOutput on Mac OS X)
@@ -86,14 +97,14 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 	NSAssert(defaultOutput, @"Can't find default output");
 	
 	// Create a new unit based on this that we'll use for output
-	OSErr err = AudioComponentInstanceNew(defaultOutput, &toneUnit);
-	NSAssert1(toneUnit, @"Error creating unit: %d", err);
+	OSErr err = AudioComponentInstanceNew(defaultOutput, &_toneUnit);
+	NSAssert1(_toneUnit, @"Error creating unit: %d", err);
 	
 	// Set our tone rendering function on the unit
 	AURenderCallbackStruct input;
 	input.inputProc = RenderTone;
 	input.inputProcRefCon = (__bridge void *)(self);
-	err = AudioUnitSetProperty(toneUnit,
+	err = AudioUnitSetProperty(_toneUnit,
                                kAudioUnitProperty_SetRenderCallback,
                                kAudioUnitScope_Input,
                                0,
@@ -114,7 +125,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 	streamFormat.mBytesPerFrame = four_bytes_per_float;
 	streamFormat.mChannelsPerFrame = 1;
 	streamFormat.mBitsPerChannel = four_bytes_per_float * eight_bits_per_byte;
-	err = AudioUnitSetProperty (toneUnit,
+	err = AudioUnitSetProperty (_toneUnit,
                                 kAudioUnitProperty_StreamFormat,
                                 kAudioUnitScope_Input,
                                 0,
@@ -125,7 +136,7 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 
 - (void)togglePlay
 {
-	if (toneUnit)
+	if (_toneUnit)
 	{
 		[self pause];
 	}
@@ -143,43 +154,48 @@ void ToneInterruptionListener(void *inClientData, UInt32 inInterruptionState)
 		UInt32 sessionCategory = kAudioSessionCategory_MediaPlayback;
 		AudioSessionSetProperty(kAudioSessionProperty_AudioCategory, sizeof(sessionCategory), &sessionCategory);
 	}
-	AudioSessionSetActive(true);
+//	AudioSessionSetActive(true);
     
     [self play];
+    
+    timeoutBase = time(NULL);
 }
 
 - (void)stop {
     [self pause];
-    
-	AudioSessionSetActive(false);
+        
+//	AudioSessionSetActive(false);
 }
 
 - (void)play
 {
-    if(!toneUnit)
+    if(!_toneUnit)
     {
 		[self createToneUnit];
 		
 		// Stop changing parameters on the unit
-		OSErr err = AudioUnitInitialize(toneUnit);
-		NSAssert1(err == noErr, @"Error initializing unit: %d", err);
+		OSErr err = AudioUnitInitialize(_toneUnit);
+//		NSAssert1(err == noErr, @"Error initializing unit: %d", err);
 		
 		// Start playback
-		err = AudioOutputUnitStart(toneUnit);
-		NSAssert1(err == noErr, @"Error starting unit: %d", err);
+		err = AudioOutputUnitStart(_toneUnit);
+//		NSAssert1(err == noErr, @"Error starting unit: %d", err);
     }
 }
 
 - (void)pause
 {
-    if (toneUnit)
+    if (_toneUnit)
 	{
-		AudioOutputUnitStop(toneUnit);
-		AudioUnitUninitialize(toneUnit);
-		AudioComponentInstanceDispose(toneUnit);
-		toneUnit = nil;
+		AudioOutputUnitStop(_toneUnit);
+		AudioUnitUninitialize(_toneUnit);
+		AudioComponentInstanceDispose(_toneUnit);
+		_toneUnit = nil;
 	}
 }
 
+- (NSTimeInterval) timeoutSeconds {
+    return 60;
+}
 
 @end

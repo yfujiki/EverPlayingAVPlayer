@@ -10,17 +10,20 @@
 #import <AudioToolbox/AudioToolbox.h>
 
 @interface SilentPlayer : NSObject {
-    AudioComponentInstance toneUnit;
+    AudioComponentInstance _toneUnit;
 
 @public
+    time_t timeoutBase;
+    time_t timeout;
     double theta;
 }
 
 + (SilentPlayer *)sharedInstance;
 
 - (void)togglePlay;
-- (void)pause;
 - (void)start;
 - (void)stop;
+- (void)play;
+- (void)pause;
 
 @end
