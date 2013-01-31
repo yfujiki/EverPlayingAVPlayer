@@ -8,7 +8,6 @@
 
 #import "ViewController.h"
 #import "AudioPlayer.h"
-#import "SilentPlayer.h"
 #import <AVFoundation/AVFoundation.h>
 
 @interface ViewController ()
@@ -93,6 +92,12 @@
     NSTimeInterval currentTime = [progressDict[@"currentTime"] doubleValue];
     NSTimeInterval duration = [progressDict[@"duration"] doubleValue];
     
+    if(duration == 0 || isnan(duration) || isnan(currentTime)) {
+        self.slider.value = 0.0f;
+        self.progressLabel.text = @"";
+        self.timeleftLabel.text = @"Finished";
+        return;
+    }
     float progress = currentTime / duration;
     self.slider.value = progress;
     

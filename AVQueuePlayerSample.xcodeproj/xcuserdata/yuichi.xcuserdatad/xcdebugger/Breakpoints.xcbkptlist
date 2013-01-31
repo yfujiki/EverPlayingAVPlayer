@@ -33,25 +33,12 @@
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "AVQueuePlayerSample/AppDelegate.m"
-         timestampString = "380606099.327832"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "38"
-         endingLineNumber = "38"
-         landmarkName = "-applicationDidEnterBackground:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
          filePath = "AVQueuePlayerSample/AudioPlayer.m"
-         timestampString = "380606212.685544"
+         timestampString = "381282095.35806"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "138"
-         endingLineNumber = "138"
+         startingLineNumber = "143"
+         endingLineNumber = "143"
          landmarkName = "-play"
          landmarkType = "5">
       </FileBreakpoint>

@@ -38,7 +38,12 @@ static NSString * ItemStatusContext = @"ItemStatus";
 - (void)loadTracks {
     
     self.tracks = @[
+        @"http://assets2.deliradio.com/uploads/track/band/5557/22448/radio_01_Helicopter_Mack.mp3",
+        @"http://assets1.deliradio.com/uploads/track/band/822/2558/purchase_and_radio_05_Emma.mp3",
+        @"http://assets2.deliradio.com/uploads/track/band/4196/16478/radio_03_Worried_Man_Blues_320.mp3",
+        @"http://assets2.deliradio.com/uploads/track/band/2013/7015/purchase_and_radio_Being_and_Time.mp3",
         @"http://s3.amazonaws.com/deliradio/uploads/track/band/11722/43168/purchase_and_radio_Charlie_Robison_Good_Times.mp3",
+//        @"http://assets2-staging.deliradio.com/deliradio/uploads/track/band/12904/46975/purchase_and_radio_05_Muscle_For_The_Wing.m4a"
         @"https://deliradio.s3.amazonaws.com/uploads/track/band/1575/5071/purchase_and_radio_11_Leave.mp3",
         @"https://deliradio.s3.amazonaws.com/uploads/track/band/25/248/radio_01_Goodbye_California.mp3",
         @"https://deliradio.s3.amazonaws.com/uploads/track/band/758/2444/radio_02_Pass_The_Peas.mp3",
@@ -207,6 +212,7 @@ static NSString * ItemStatusContext = @"ItemStatus";
             [[NSNotificationCenter defaultCenter] postNotificationName:kPlayerItemChangedEvent object:asset];
         }
     } else if(context == &CurrentItemContext) {
+        NSLog(@"Current item changed to %@", self.queuePlayer.currentItem);
         AVPlayerItem * oldPlayerItem = change[NSKeyValueChangeOldKey];
         if(oldPlayerItem) {
             [self unregisterObserversForItem:oldPlayerItem];
@@ -218,15 +224,10 @@ static NSString * ItemStatusContext = @"ItemStatus";
         [[NSNotificationCenter defaultCenter] postNotificationName:kPlayerItemChangedEvent object:asset];
         
     } else if(context == &PlayerRateContext) {
+        
         float oldRate = [change[NSKeyValueChangeOldKey] floatValue];
         float newRate = [change[NSKeyValueChangeNewKey] floatValue];
         NSLog(@"Player rate changed from %f to %f", oldRate, newRate);
-        if(newRate == 0.0 && oldRate == 1.0) {
-            // It means that the player has stopped for whatever reason
-//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-//                self.queuePlayer.rate = 1.0;
-//            });
-        }
         
     } else if(context == &PlaybackLikelyToKeepUp) {
         AVPlayerItem * item = (AVPlayerItem *)object;
@@ -243,7 +244,7 @@ static NSString * ItemStatusContext = @"ItemStatus";
             [self play];
             NSLog(@"Play item due to status");
         } else if(item.status == AVPlayerItemStatusFailed) {            
-            NSLog(@"Item status failed !!!!!!!!!!!!!!!!!!");
+//            NSLog(@"Item status failed !!!!!!!!!!!!!!!!!!");
         } else {
             [self pause];
             NSLog(@"Pausing since item status has changed to unknown");
