@@ -13,6 +13,7 @@
 
 @property (nonatomic, strong) AVQueuePlayer * queuePlayer;
 @property (nonatomic, strong) NSArray * tracks;
+@property (nonatomic, strong) NSMutableArray * items;
 @property (nonatomic, strong) id timeObserver;
 
 @end
@@ -43,7 +44,6 @@ static NSString * ItemStatusContext = @"ItemStatus";
         @"http://assets2.deliradio.com/uploads/track/band/4196/16478/radio_03_Worried_Man_Blues_320.mp3",
         @"http://assets2.deliradio.com/uploads/track/band/2013/7015/purchase_and_radio_Being_and_Time.mp3",
         @"http://s3.amazonaws.com/deliradio/uploads/track/band/11722/43168/purchase_and_radio_Charlie_Robison_Good_Times.mp3",
-//        @"http://assets2-staging.deliradio.com/deliradio/uploads/track/band/12904/46975/purchase_and_radio_05_Muscle_For_The_Wing.m4a"
         @"https://deliradio.s3.amazonaws.com/uploads/track/band/1575/5071/purchase_and_radio_11_Leave.mp3",
         @"https://deliradio.s3.amazonaws.com/uploads/track/band/25/248/radio_01_Goodbye_California.mp3",
         @"https://deliradio.s3.amazonaws.com/uploads/track/band/758/2444/radio_02_Pass_The_Peas.mp3",
@@ -54,15 +54,16 @@ static NSString * ItemStatusContext = @"ItemStatus";
         @"https://deliradio.s3.amazonaws.com/uploads/track/band/451/1352/purchase_and_radio_04_Church_of_Hanging_Leaders.mp3"
     ];
     
-    NSMutableArray * items = [@[] mutableCopy];
+    self.items = [@[] mutableCopy];
     
     [self.tracks enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         AVURLAsset * asset = [AVURLAsset assetWithURL:[NSURL URLWithString:obj]];
         AVPlayerItem * item = [[AVPlayerItem alloc] initWithAsset:asset];
-        [items addObject:item];
+        [self.items addObject:item];
     }];
     
-    self.queuePlayer = [[AVQueuePlayer alloc] initWithItems:items];    
+//    self.queuePlayer = [[AVQueuePlayer alloc] initWithItems:items];
+    self.queuePlayer = [[AVQueuePlayer alloc] initWithItems:@[self.items[0], self.items[1]]];
 }
 
 - (void)rebuildPlayer {
@@ -90,16 +91,16 @@ static NSString * ItemStatusContext = @"ItemStatus";
     [self.queuePlayer addObserver:self forKeyPath:@"currentItem" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:&CurrentItemContext];
     [self.queuePlayer addObserver:self forKeyPath:@"rate" options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:&PlayerRateContext];
     
-    __weak id weakSelf = self;
+    __weak AudioPlayer * weakSelf = self;
     self.timeObserver =
         [self.queuePlayer addPeriodicTimeObserverForInterval:CMTimeMake(1.0f, 1.0f)
                                                        queue:dispatch_get_main_queue()
                                                   usingBlock:^(CMTime time) {
                                                   
                                                       [weakSelf updateProgress:nil];
-                                                      NSLog(@"Player Status : %d", self.queuePlayer.status);
-                                                      NSLog(@"Current Item Status : %d", self.queuePlayer.currentItem.status);
-                                                      NSLog(@"Playback Rate : %f", self.queuePlayer.rate);
+                                                      NSLog(@"Player Status : %d", weakSelf.queuePlayer.status);
+                                                      NSLog(@"Current Item Status : %d", weakSelf.queuePlayer.currentItem.status);
+                                                      NSLog(@"Playback Rate : %f", weakSelf.queuePlayer.rate);
                                                   }];    
 }
 
@@ -170,7 +171,7 @@ static NSString * ItemStatusContext = @"ItemStatus";
     NSTimeInterval duration_ = duration.value * 1.0f / duration.timescale;
     
     if(duration_ == 0.f) {
-        NSLog(@"EEEEEEEEEEEEEMERGENCY for %@", self.queuePlayer.currentItem);
+        NSLog(@"Illegal status for player item : %@", self.queuePlayer.currentItem);
         NSLog(@"Player status : %d, rate : %f", self.queuePlayer.status, self.queuePlayer.rate);
         NSLog(@"Player item status : %d", self.queuePlayer.currentItem.status);
         currentTime_ = 0.f;
@@ -259,6 +260,15 @@ static NSString * ItemStatusContext = @"ItemStatus";
 
 - (void)onTrackFinishedNotification:(NSNotification *)notification {
     [self.queuePlayer advanceToNextItem];
+    
+    AVPlayerItem * item = (AVPlayerItem *)notification.object;
+    int index = [self.items indexOfObject:item];
+    int nextIndex = index + 1;
+    int onDeckIndex = index + 2;
+    
+    AVPlayerItem * nextItem = self.items[nextIndex];
+    AVPlayerItem * onDeckItem = self.items[onDeckIndex];
+    [self.queuePlayer insertItem:onDeckItem afterItem:nextItem];
 }
 
 @end
